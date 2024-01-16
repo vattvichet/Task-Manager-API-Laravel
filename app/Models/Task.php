@@ -11,4 +11,5 @@ class Task extends Model
 
     protected $casts = ['isDone' => 'boolean'];
     protected $hidden = ['updated_at'];
+    protected $fillable = ['title', 'isDone'];
 }
