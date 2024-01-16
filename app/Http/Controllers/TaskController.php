@@ -8,13 +8,23 @@ use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use Spatie\QueryBuilder\QueryBuilder;
+
 
 class TaskController extends Controller
 {
     //
     public function index(Request $request)
     {
-        return new TaskCollection(Task::all());
+
+        $tasks = QueryBuilder::for(Task::class)
+            //filter can be more than one ['isDone','title']
+            ->allowedFilters(['isDone'])
+            ->defaultSort('-created_at')
+            ->allowedSorts(['created_at', 'title'])
+            ->paginate();
+
+        return new TaskCollection($tasks);
         // return response()->json(new TaskCollection(Task::all()), 201);
     }
     public function show(Request $request, Task $task)
