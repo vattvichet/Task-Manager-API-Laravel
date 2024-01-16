@@ -16,11 +16,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::fallback(function () {
-    return "Url Doesn't Exist! \n\n Please Double-Check";
+    return response()->json([
+        'message' => 'Url Not Found',
+    ], 404);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('/tasks', TaskController::class);
+// Route::apiResource('/tasks', TaskController::class);
+// Route::get('/tasks', [TaskController::class, 'index']);
+// Route::get('/tasks/{id}', [TaskController::class, 'show']);
+// Route::post('/tasks', [TaskController::class, 'store']);
+// Route::put('/tasks/{id}', [TaskController::class, 'update']);
+// Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+Route::resource('tasks', TaskController::class);

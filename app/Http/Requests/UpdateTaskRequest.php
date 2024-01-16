@@ -23,7 +23,7 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             //tasks is the name of the table
-            'title' => 'sometimes|min:5|max:100|unique:tasks',
+            'title' => 'sometimes|min:5|max:100',
             'isDone' => 'sometimes|boolean'
         ];
     }

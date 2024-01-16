@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Http\Resources\TaskCollection;
-use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -23,31 +21,70 @@ class TaskController extends Controller
             ->defaultSort('-created_at')
             ->allowedSorts(['created_at', 'title'])
             ->paginate();
-
-        return new TaskCollection($tasks);
-        // return response()->json(new TaskCollection(Task::all()), 201);
+        // return new TaskCollection($tasks);
+        return response()->json([
+            'status' => 'success',
+            'data' => $tasks
+        ], 200,);
     }
-    public function show(Request $request, Task $task)
+    public function show($id)
     {
-        return new TaskResource($task);
+        $task = Task::find($id);
+        if ($task !== null) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $task
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'ID Invalid'
+            ], 404);
+        }
     }
 
     public function store(StoreTaskRequest $request)
     {
         $validated = $request->validated();
         $task = Task::create($validated);
-        return new TaskResource($task);;
+        return response()->json([
+            'status' => 'success',
+            'data' => $task
+        ], 200);
+
+        // return new TaskResource($task);;
     }
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, $id)
     {
-        $validated = $request->validated();
-        $task->update($validated);
-        return new TaskResource($task);
+        $task = Task::find($id);
+        if ($task !== null) {
+            $validated = $request->validated();
+            $task->update($validated);
+            return response()->json([
+                'status' => 'success',
+                'data' => $task
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'ID Invalid'
+            ], 404);
+        }
     }
 
-    public function destroy(Request $request, Task $task)
+    public function destroy($id)
     {
-        $task->delete();
-        return response()->noContent();
+        $task = Task::find($id);
+        if ($task !== null) {
+            $task->delete();
+            return response()->json([
+                'message' => 'item is deleted',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'ID Invalid'
+            ], 404);
+        }
     }
 }
