@@ -6,15 +6,16 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class TaskController extends Controller
 {
     //
-    public function index(Request $request)
+    public function index()
     {
-
         $tasks = QueryBuilder::for(Task::class)
             //filter can be more than one ['isDone','title']
             ->allowedFilters(['isDone'])
@@ -46,13 +47,11 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $validated = $request->validated();
-        $task = Task::create($validated);
+        $task = Auth::user()->tasks()->create($validated);
         return response()->json([
             'status' => 'success',
             'data' => $task
         ], 200);
-
-        // return new TaskResource($task);;
     }
     public function update(UpdateTaskRequest $request, $id)
     {
