@@ -22,6 +22,25 @@ class ProjectController extends Controller
             200
         );
     }
+
+    public function show(Request $request, $id)
+    {
+        $project = Auth::user()->projects()->find($id);
+        if ($project !== null) {
+            $tasks = $project->tasks()->where('project_id', $id)->get();
+            return response()->json([
+                'status' => 'success',
+                'id' => $id,
+                'title' => $project['title'],
+                'tasks' => $tasks,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'id' => 'Project ID Invalid',
+            ], 404);
+        }
+    }
     //
     public function store(StoreProjectRequest $request)
     {
