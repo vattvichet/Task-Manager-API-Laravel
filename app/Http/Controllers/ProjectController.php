@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
+
+    public function index()
+    {
+        $projects = Auth::user()->projects()->get();
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => $projects,
+            ],
+            200
+        );
+    }
     //
     public function store(StoreProjectRequest $request)
     {
@@ -24,7 +36,7 @@ class ProjectController extends Controller
 
     public function update(UpdateTaskRequest $request, $id)
     {
-        $project = Project::find($id);
+        $project = Auth::user()->projects()->find($id);
         if ($project !== null) {
             $project->update($request->validated());
             return response()->json([

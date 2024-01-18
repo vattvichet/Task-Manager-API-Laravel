@@ -30,7 +30,7 @@ class TaskController extends Controller
     }
     public function show($id)
     {
-        $task = Task::find($id);
+        $task = Auth::user()->tasks()->find($id);
         if ($task !== null) {
             return response()->json([
                 'status' => 'success',
@@ -55,7 +55,7 @@ class TaskController extends Controller
     }
     public function update(UpdateTaskRequest $request, $id)
     {
-        $task = Task::find($id);
+        $task = Auth::user()->tasks()->find($id);
         if ($task !== null) {
             $validated = $request->validated();
             $task->update($validated);
@@ -73,7 +73,7 @@ class TaskController extends Controller
 
     public function destroy($id)
     {
-        $task = Task::find($id);
+        $task = Auth::user()->tasks()->find($id);
         if ($task !== null) {
             $task->delete();
             return response()->json([
