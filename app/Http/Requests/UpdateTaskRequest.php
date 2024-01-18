@@ -27,6 +27,12 @@ class UpdateTaskRequest extends FormRequest
             //tasks is the name of the table
             'title' => 'sometimes|min:5|max:100',
             'isDone' => 'sometimes|boolean',
+            'project_id' => [
+                'nullable',
+                Rule::exists('projects', 'id')->where(function ($query) {
+                    $query->where('creator_id', Auth::id());
+                })
+            ],
         ];
     }
 }

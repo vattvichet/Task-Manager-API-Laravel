@@ -14,7 +14,7 @@ class Task extends Model
     use HasFactory;
 
     protected $casts = ['isDone' => 'boolean'];
-    protected $fillable = ['title', 'isDone'];
+    protected $fillable = ['title', 'isDone', 'project_id'];
 
     public function creator(): BelongsTo
     {
