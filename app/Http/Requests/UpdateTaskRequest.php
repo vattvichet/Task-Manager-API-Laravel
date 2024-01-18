@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             //tasks is the name of the table
             'title' => 'sometimes|min:5|max:100',
-            'isDone' => 'sometimes|boolean'
+            'isDone' => 'sometimes|boolean',
         ];
     }
 }
